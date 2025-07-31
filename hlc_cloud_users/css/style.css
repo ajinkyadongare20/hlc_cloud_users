@@ -275,3 +275,10 @@
     background: var(--dark);
     border-color: var(--primary);
 }
+
+/*** Dashboard ***/
+.chart-container {
+    width: 350px;
+    height: 350px;
+    margin: 0 auto;
+}

@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php 
+if (!isset($_SESSION['username'])) {
+     header('Location: ' . $_SERVER['HTTP_REFERER']);
+}
 function get_all_users($conn){
     $response_data = array("status"=>false,'message'=>"Something went wrong...!");
     if($conn){
@@ -30,7 +33,6 @@ if (isset($_POST['update'])) {
     $is_active = isset($_POST['is_active']) ? 1 : 0;
     $subscription_start = $_POST['subscription_start']; // Format: Y-m-d\TH:i (from input)
     $subscription_end = $_POST['subscription_end'];
-
     // Convert to MySQL datetime format
     $subscription_start = date('Y-m-d H:i:s', strtotime($subscription_start));
     $subscription_end = date('Y-m-d H:i:s', strtotime($subscription_end));
@@ -127,7 +129,7 @@ if (isset($_POST['update'])) {
                 <div class="row g-4">
                     <div class="col-12">
                         <div class="bg-light rounded h-100 p-4">
-                             <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h6 class="mb-0">Responsive Table</h6>
                                 <a href="update_details.php" class="btn btn-primary">Update Details</a>
                             </div>
@@ -160,23 +162,25 @@ if (isset($_POST['update'])) {
                                                 <?php echo $row['subscription_end'];?>
                                             </td>
                                             <td>
-                                            <div class="btn-group">
-                                                <!-- Trigger button with just ... -->
-                                                <button class="btn btn-link text-dark no-arrow m-0 p-0"
-                                                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    ...
-                                                </button>
+                                                <div class="btn-group">
+                                                    <!-- Trigger button with just ... -->
+                                                    <button class="btn btn-link text-dark no-arrow m-0 p-0"
+                                                        data-bs-toggle="dropdown" aria-haspopup="true"
+                                                        aria-expanded="false">
+                                                        ...
+                                                    </button>
 
-                                               <!-- Dropdown menu with two options -->
-                                                <div class="dropdown-menu dropdown-menu-start mt-2 py-1">
-                                                    <a href="#" class="dropdown-item" onclick="event.preventDefault(); toggleForm(<?php echo $row['id']; ?>);">
-                                                        Update User
-                                                    </a>
-                                                    <!-- Update Button -->
+                                                    <!-- Dropdown menu with two options -->
+                                                    <div class="dropdown-menu dropdown-menu-start mt-2 py-1">
+                                                        <a href="#" class="dropdown-item"
+                                                            onclick="event.preventDefault(); toggleForm(<?php echo $row['id']; ?>);">
+                                                            Update User
+                                                        </a>
+                                                        <!-- Update Button -->
+                                                    </div>
+
                                                 </div>
-
-                                            </div>
-                                        </td>
+                                            </td>
                                         </tr>
                                         <tr id="formRow_<?php echo $row['id']; ?>" style="display: none;">
                                             <td colspan="8"> <!-- 8 columns to span full width -->
@@ -198,26 +202,36 @@ if (isset($_POST['update'])) {
                                                         </thead>
                                                         <tbody>
                                                             <tr>
-                                                            <td>
-                                                                    <input type="text" name="username" class="form-control"
-                                                                        value="<?php echo isset($row['username']) ? htmlspecialchars($row['username']) : ''; ?>" required>
+                                                                <td>
+                                                                    <input type="text" name="username"
+                                                                        class="form-control"
+                                                                        value="<?php echo isset($row['username']) ? htmlspecialchars($row['username']) : ''; ?>"
+                                                                        required>
                                                                 </td>
                                                                 <td>
-                                                                    <input type="text" name="pid" class="form-control" value="<?php echo $row['pid']; ?>" required>
+                                                                    <input type="text" name="pid" class="form-control"
+                                                                        value="<?php echo $row['pid']; ?>" required>
                                                                 </td>
                                                                 <td>
-                                                                    <input type="text" name="mid" class="form-control" value="<?php echo $row['mid']; ?>" required>
+                                                                    <input type="text" name="mid" class="form-control"
+                                                                        value="<?php echo $row['mid']; ?>" required>
                                                                 </td>
                                                                 <td>
                                                                     <?php  $ischecked = "";if( $row['is_active']==1){$ischecked="checked";} ?>
-                                                                        <div class="form-check form-switch">
-                                                                            <input class="form-check-input" <?php echo $ischecked; ?> 
-                                                                                onclick="updateStatus('<?php echo $row['pid']; ?>','<?php echo $row['user_id'];?>','<?php echo $ischecked;?>');" 
-                                                                            type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                                                                        <label class="form-check-label" for="flexSwitchCheckDefault"></label>
+                                                                    <div class="form-check form-switch">
+                                                                        <input class="form-check-input" <?php echo
+                                                                            $ischecked; ?>
+                                                                        onclick="updateStatus('
+                                                                        <?php echo $row['pid']; ?>','
+                                                                        <?php echo $row['user_id'];?>','
+                                                                        <?php echo $ischecked;?>');"
+                                                                        type="checkbox" role="switch"
+                                                                        id="flexSwitchCheckDefault">
+                                                                        <label class="form-check-label"
+                                                                            for="flexSwitchCheckDefault"></label>
                                                                     </div>
                                                                 </td>
-                                                                
+
                                                                 <?php
                                                                 function formatDateTimeLocal($datetime) {
                                                                     if (!empty($datetime)) {
@@ -228,15 +242,20 @@ if (isset($_POST['update'])) {
                                                                 ?>
 
                                                                 <td>
-                                                                    <input type="datetime-local" name="subscription_start" class="form-control"
-                                                                        value="<?php echo formatDateTimeLocal($row['subscription_start']); ?>" required>
+                                                                    <input type="datetime-local"
+                                                                        name="subscription_start" class="form-control"
+                                                                        value="<?php echo formatDateTimeLocal($row['subscription_start']); ?>"
+                                                                        required>
                                                                 </td>
                                                                 <td>
-                                                                    <input type="datetime-local" name="subscription_end" class="form-control"
-                                                                        value="<?php echo formatDateTimeLocal($row['subscription_end']); ?>" required>
+                                                                    <input type="datetime-local" name="subscription_end"
+                                                                        class="form-control"
+                                                                        value="<?php echo formatDateTimeLocal($row['subscription_end']); ?>"
+                                                                        required>
                                                                 </td>
                                                                 <td>
-                                                                    <button type="submit" name="update" class="btn btn-success">Update</button>
+                                                                    <button type="submit" name="update"
+                                                                        class="btn btn-success">Update</button>
                                                                 </td>
 
                                                             </tr>

@@ -1,16 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php 
-
-function get_all_users($conn){
+if (!isset($_SESSION['username'])) {
+     header('Location: ' . $_SERVER['HTTP_REFERER']);
+}
+function get_all_users($conn,$pid){
     $response_data = array("status"=>false,'message'=>"Something went wrong...!");
     if($conn){
-         $sql = "SELECT * from heat_load_subscription GROUP BY pid, motherboard_id ORDER BY id DESC;";
+         $sql = "SELECT * from heat_load_subscription where pid='$pid' ORDER BY id DESC;";
          $result = mysqli_query($conn, $sql);
          return $result;
         }
 }
+
+
 try{
+    $pid = $_GET['pid'];
+    if($pid==''){
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+    }
     include 'db_con.php';
     if ($conn->connect_error) {
         echo json_encode(False);
@@ -19,7 +27,6 @@ try{
 }catch (Exception $e) {
     echo json_encode(False);
 }
-
 ?>
 
 <head>
@@ -41,13 +48,10 @@ try{
     <!-- Icon Font Stylesheet -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-
 
     <!-- Libraries Stylesheet -->
     <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
     <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
-
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -55,14 +59,6 @@ try{
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
 </head>
-<style>
-    span.no_count {
-        background-color: green;
-        border-radius: 50%;
-        padding: 3px;
-        color: #fff;
-    }
-</style>
 
 <body>
     <div class="container-fluid position-relative bg-white d-flex p-0">
@@ -95,10 +91,7 @@ try{
                     </div>
                 </div>
                 <div class="navbar-nav w-100">
-                    <a href="hlc_users.php" class="nav-item nav-link active my-1"><i
-                            class="fa fa-table me-2"></i>Tables</a>
-                    <a href="dashboard.php" class="nav-item nav-link my-1"><i
-                            class="fa fa-chart-bar me-2"></i>Dashboard</a>
+                    <a href="hlc_users.php" class="nav-item nav-link active"><i class="fa fa-table me-2"></i>Tables</a>
                 </div>
             </nav>
         </div>
@@ -115,27 +108,28 @@ try{
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h6 class="mb-0">HLC Users</h6>
                                 <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <a href="insert_user.php" class="btn btn-primary mx-1"><i class="fa fa-plus"
-                                            aria-hidden="true"></i> New User</a>
+                                    <a href="view_user.php" class="btn btn-primary mx-1">← Back</a>
+                                    <a href="update_details.php?pid=<?php echo $_GET['pid'];?>"
+                                        class="btn btn-primary mx-1">Update Details</a>
                                 </div>
                             </div>
                             <div class="table-responsive">
-                                <table id="userTable" class="display">
+                                <table class="table">
                                     <thead>
                                         <tr>
                                             <th scope="col">#</th>
                                             <th scope="col">User Name</th>
-                                            <th scope="col">User Type</th>
                                             <th scope="col">PID</th>
                                             <th scope="col">Board ID(M)</th>
                                             <th scope="col">Active</th>
+                                            <th scope="col">Subscription Start</th>
                                             <th scope="col">Subscription End</th>
-                                            <th scope="col">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $response = get_all_users($conn);
+                                        $pid = $_GET['pid'];
+                                        $response = get_all_users($conn,$pid);
                                         if(mysqli_num_rows($response) > 0){
                                             $count = 1;
                                             while ($row = mysqli_fetch_assoc($response)){ ?>
@@ -147,47 +141,26 @@ try{
                                                 <?php echo $row['user_id']; ?>
                                             </td>
                                             <td>
-                                                <?php 
-                                                    if($row['user_type']=='Server User'){ echo "<span class='no_count'>". $row['remaining_count']."</span>"; ?>
-                                                <i class="fa fa-server" aria-hidden="true"></i>
-                                                <?php }?>
-                                                <?php if($row['user_type']!=''){ ?>
-                                                <i class="fa fa-user" aria-hidden="true"></i>
-                                                <?php }?>
-
-                                            </td>
-                                            <td>
-                                                <?php echo $row['pid']; ?><a
-                                                    href="view_all_pids.php?pid=<?php echo $row['pid'];?>"><i
-                                                        class="fas fa-eye green" aria-hidden="true"></i></a>
+                                                <?php echo $row['pid']; ?></i>
                                             </td>
                                             <td>
                                                 <?php echo $row['motherboard_id']; ?>
                                             </td>
                                             <td>
-                                                <?php  $ischecked = "";
-                                                        if( $row['is_active']==1){$ischecked="checked";} ?>
+                                                <?php $ischecked = ($row['is_active'] == 1) ? "checked" : ""; ?>
                                                 <div class="form-check form-switch">
                                                     <input class="form-check-input" <?php echo $ischecked; ?>
-                                                    onclick="updateStatus('
-                                                    <?php echo $row['pid']; ?>','
-                                                    <?php echo $row['user_id'];?>','
-                                                    <?php echo $ischecked;?>');"
-                                                    type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                                                    type="checkbox" role="switch"
+                                                    id="flexSwitchCheckDefault">
                                                     <label class="form-check-label"
                                                         for="flexSwitchCheckDefault"></label>
                                                 </div>
                                             </td>
                                             <td>
-                                                <?php echo $row['subscription_end']; ?>
+                                                <?php echo $row['subscription_start']; ?>
                                             </td>
                                             <td>
-                                                <a href="view_all_pids.php?pid=<?php echo $row['pid'];?>"><i
-                                                        class="fas fa-edit" style="color:#009cff85;"></i></a>
-                                                <a href="delete_user.php?pid=<?php echo $row['pid']; ?>"
-                                                    onclick="return confirm('Are you sure you want to delete this user?');"><i
-                                                        class="fa fa-trash" aria-hidden="true"
-                                                        style="color:#ff0000a8;"></i></a>
+                                                <?php echo $row['subscription_end']; ?>
                                             </td>
                                         </tr>
                                         <?php 
@@ -226,7 +199,6 @@ try{
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="lib/chart/chart.min.js"></script>
     <script src="lib/easing/easing.min.js"></script>
@@ -239,26 +211,5 @@ try{
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
 </body>
-
-<script>
-    function updateStatus(pid, user_id, ischecked) {
-        let con = confirm('Are you sure you want to update the status?')
-        if (con) {
-            if (ischecked == "") {
-                ischecked = 1;
-            } else {
-                ischecked = 0;
-            }
-            window.location.href = "update_status.php?pid=" + pid + "&user_id=" + user_id + "&is_active=" + ischecked;
-        }
-    }
-    // return ;
-    $(document).ready(function () {
-        $('#userTable').DataTable({
-            "pageLength": 5 // You can change this to 10, 25 etc
-        });
-    });
-
-</script>
 
 </html>

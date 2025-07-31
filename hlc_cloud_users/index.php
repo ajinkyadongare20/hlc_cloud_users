@@ -1,5 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+<?php
+session_start();
+
+if (isset($_POST['login'])) {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    if ($username === 'admin' && $password === 'golden7') {
+        $_SESSION['username'] = $username;
+
+        // Detect environment and redirect accordingly
+        if (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) {
+            // For localhost
+            header("Location: /wordpess_projects/hlc_cloud_users/hlc_cloud_users/view_user.php");
+        } else {
+            // For server
+            header("Location: /demo-hlccloud/view_user.php");
+        }
+        exit;
+    } else {
+        echo "Login Failed";
+    }
+}
+?>
+
 
 <head>
     <meta charset="utf-8">
@@ -41,30 +66,6 @@
         </div>
         <!-- Spinner End -->
 
-        <!-- Sidebar Start -->
-        <div class="sidebar pe-4 pb-3">
-            <nav class="navbar bg-light navbar-light">
-                <a href="index.html" class="navbar-brand mx-4 mb-3">
-                    <h3 class="text-primary"><i class="fa fa-hashtag me-2"></i>HLC Project</h3>
-                </a>
-                <div class="d-flex align-items-center ms-4 mb-4">
-                    <div class="position-relative">
-                        <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                        <div
-                            class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1">
-                        </div>
-                    </div>
-                    <div class="ms-3">
-                        <h6 class="mb-0">Subodh M</h6>
-                        <span>Admin</span>
-                    </div>
-                </div>
-                <div class="navbar-nav w-100">
-                    <a href="hlc_users.php" class="nav-item nav-link active"><i class="fa fa-table me-2"></i>Tables</a>
-                </div>
-            </nav>
-        </div>
-        <!-- Sidebar End -->
 
         <!-- Login Form Start -->
         <div class="container d-flex align-items-center justify-content-center min-vh-100">
@@ -74,19 +75,21 @@
                     <p class="text-muted">Welcome back to HLC Cloud</p>
                 </div>
 
-                <form onsubmit="return validateLogin();">
+                <form action="#" method="POST">
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control rounded-3" id="username" placeholder="Enter username" required>
+                        <input type="text" class="form-control rounded-3" id="username" name="username"
+                            placeholder="Enter username" required>
                     </div>
 
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control rounded-3" id="password" placeholder="Enter password" required>
+                        <input type="password" class="form-control rounded-3" id="password" name="password"
+                            placeholder="Enter password" required>
                     </div>
 
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary rounded-3">Login</button>
+                    <div class="d-grid py-3">
+                        <input type="submit" class="btn btn-primary rounded-3" name="login" value="Login">
                     </div>
                 </form>
 

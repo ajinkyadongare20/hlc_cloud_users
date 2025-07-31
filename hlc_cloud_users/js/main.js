@@ -59,148 +59,118 @@
     });
 
 
-    // Worldwide Sales Chart
-    var ctx1 = $("#worldwide-sales").get(0).getContext("2d");
-    var myChart1 = new Chart(ctx1, {
-        type: "bar",
-        data: {
-            labels: ["2016", "2017", "2018", "2019", "2020", "2021", "2022"],
-            datasets: [{
-                    label: "USA",
-                    data: [15, 30, 55, 65, 60, 80, 95],
-                    backgroundColor: "rgba(0, 156, 255, .7)"
-                },
-                {
-                    label: "UK",
-                    data: [8, 35, 40, 60, 70, 55, 75],
-                    backgroundColor: "rgba(0, 156, 255, .5)"
-                },
-                {
-                    label: "AU",
-                    data: [12, 25, 45, 55, 65, 70, 60],
-                    backgroundColor: "rgba(0, 156, 255, .3)"
-                }
-            ]
-            },
-        options: {
-            responsive: true
-        }
-    });
-
-
-    // Salse & Revenue Chart
-    var ctx2 = $("#salse-revenue").get(0).getContext("2d");
-    var myChart2 = new Chart(ctx2, {
-        type: "line",
-        data: {
-            labels: ["2016", "2017", "2018", "2019", "2020", "2021", "2022"],
-            datasets: [{
-                    label: "Salse",
-                    data: [15, 30, 55, 45, 70, 65, 85],
-                    backgroundColor: "rgba(0, 156, 255, .5)",
-                    fill: true
-                },
-                {
-                    label: "Revenue",
-                    data: [99, 135, 170, 130, 190, 180, 270],
-                    backgroundColor: "rgba(0, 156, 255, .3)",
-                    fill: true
-                }
-            ]
-            },
-        options: {
-            responsive: true
-        }
-    });
-    
-
-
-    // Single Line Chart
-    var ctx3 = $("#line-chart").get(0).getContext("2d");
-    var myChart3 = new Chart(ctx3, {
-        type: "line",
-        data: {
-            labels: [50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150],
-            datasets: [{
-                label: "Salse",
-                fill: false,
-                backgroundColor: "rgba(0, 156, 255, .3)",
-                data: [7, 8, 8, 9, 9, 9, 10, 11, 14, 14, 15]
-            }]
-        },
-        options: {
-            responsive: true
-        }
-    });
-
-
-    // Single Bar Chart
-    var ctx4 = $("#bar-chart").get(0).getContext("2d");
-    var myChart4 = new Chart(ctx4, {
-        type: "bar",
-        data: {
-            labels: ["Italy", "France", "Spain", "USA", "Argentina"],
-            datasets: [{
-                backgroundColor: [
-                    "rgba(0, 156, 255, .7)",
-                    "rgba(0, 156, 255, .6)",
-                    "rgba(0, 156, 255, .5)",
-                    "rgba(0, 156, 255, .4)",
-                    "rgba(0, 156, 255, .3)"
-                ],
-                data: [55, 49, 44, 24, 15]
-            }]
-        },
-        options: {
-            responsive: true
-        }
-    });
-
-
-    // Pie Chart
-    var ctx5 = $("#pie-chart").get(0).getContext("2d");
-    var myChart5 = new Chart(ctx5, {
+    document.addEventListener("DOMContentLoaded", function () {
+    // Weekly Chart - Pie Chart
+    const ctxWeekly = document.getElementById("weekly-chart").getContext("2d");
+    new Chart(ctxWeekly, {
         type: "pie",
         data: {
-            labels: ["Italy", "France", "Spain", "USA", "Argentina"],
+            labels: ["Active Users", "Inactive Users"],
             datasets: [{
                 backgroundColor: [
-                    "rgba(0, 156, 255, .7)",
-                    "rgba(0, 156, 255, .6)",
-                    "rgba(0, 156, 255, .5)",
-                    "rgba(0, 156, 255, .4)",
-                    "rgba(0, 156, 255, .3)"
+                    "rgba(0, 200, 83, 0.7)",    // Green
+                    "rgba(244, 67, 54, 0.7)"    // Red
                 ],
-                data: [55, 49, 44, 24, 15]
+                data: [activeUsers, inactiveUsers]
             }]
         },
         options: {
-            responsive: true
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'User Activity - Weekly View'
+                },
+                legend: {
+                    position: 'bottom'
+                }
+            }
         }
     });
 
-
-    // Doughnut Chart
-    var ctx6 = $("#doughnut-chart").get(0).getContext("2d");
-    var myChart6 = new Chart(ctx6, {
+    // Monthly Chart - Doughnut Chart
+    const ctxMonthly = document.getElementById("monthly-chart").getContext("2d");
+    new Chart(ctxMonthly, {
         type: "doughnut",
         data: {
-            labels: ["Italy", "France", "Spain", "USA", "Argentina"],
+            labels: ["Active Users", "Inactive Users"],
             datasets: [{
                 backgroundColor: [
-                    "rgba(0, 156, 255, .7)",
-                    "rgba(0, 156, 255, .6)",
-                    "rgba(0, 156, 255, .5)",
-                    "rgba(0, 156, 255, .4)",
-                    "rgba(0, 156, 255, .3)"
+                    "#2196f3", // Blue
+                    "#ff9800"  // Orange
                 ],
-                data: [55, 49, 44, 24, 15]
+                data: [monthlyActiveUsers, monthlyInactiveUsers]
             }]
         },
         options: {
-            responsive: true
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'User Activity - Monthly View'
+                },
+                legend: {
+                    position: 'bottom'
+                }
+            }
         }
     });
+});
+
+
+function createUserTable(data) {
+    if (data.length === 0) return "<p>No users found in this range.</p>";
+
+    let html = `<table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>User Name</th>
+                <th>PID</th>
+                <th>MID</th>
+                <th>Active</th>
+                <th>Subscription Start</th>
+                <th>Subscription End</th>
+            </tr>
+        </thead>
+        <tbody>`;
+
+    data.forEach((user, index) => {
+        html += `<tr>
+            <td>${index + 1}</td>
+            <td>${user.user_id}</td>
+            <td>${user.pid}</td>
+            <td>${user.mid}</td>
+            <td>${user.is_active == 1 ? 'Yes' : 'No'}</td>
+            <td>${user.subscription_start}</td>
+            <td>${user.subscription_end}</td>
+        </tr>`;
+    });
+
+    html += `</tbody></table>`;
+    return html;
+}
+
+function loadWeeklyExpiringUsers() {
+    fetch("get_weekly_users.php")
+        .then(res => res.json())
+        .then(data => {
+            const table = createUserTable(data);
+            document.getElementById("weekly-users-table").innerHTML = table;
+            document.getElementById("weekly-users-table").style.display = 'block';
+        });
+}
+
+function loadMonthlyExpiringUsers() {
+    fetch("get_monthly_users.php")
+        .then(res => res.json())
+        .then(data => {
+            const table = createUserTable(data);
+            document.getElementById("monthly-users-table").innerHTML = table;
+            document.getElementById("monthly-users-table").style.display = 'block';
+        });
+}
+
 
     
 })(jQuery);

@@ -82,7 +82,10 @@ try{
                     </div>
                 </div>
                 <div class="navbar-nav w-100">
-                    <a href="hlc_users.php" class="nav-item nav-link active"><i class="fa fa-table me-2"></i>Tables</a>
+                    <a href="hlc_users.php" class="nav-item nav-link active my-1"><i
+                            class="fa fa-table me-2"></i>Tables</a>
+                    <a href="dashboard.php" class="nav-item nav-link my-1"><i
+                            class="fa fa-chart-bar me-2"></i>Dashboard</a>
                 </div>
             </nav>
         </div>
@@ -98,8 +101,9 @@ try{
                         <div class="bg-light rounded h-100 p-4">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h6 class="mb-0">Responsive Table</h6>
-                                 <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <a href="insert_user.php" class="btn btn-primary mx-1">Add User</a>
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <a href="insert_user.php" class="btn btn-primary mx-1"><i class="fa fa-plus"
+                                            aria-hidden="true"></i> New User</a>
                                 </div>
                             </div>
                             <div class="table-responsive">
@@ -139,12 +143,16 @@ try{
                                             </td>
                                             <td>
                                                 <?php  $ischecked = "";if( $row['is_active']==1){$ischecked="checked";} ?>
-                                                    <div class="form-check form-switch">
-                                                        <input class="form-check-input" <?php echo $ischecked; ?> 
-                                                            onclick="updateStatus('<?php echo $row['pid']; ?>','<?php echo $row['user_id'];?>','<?php echo $ischecked;?>');" 
-                                                            type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                                                        <label class="form-check-label" for="flexSwitchCheckDefault"></label>
-                                                    </div>
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" <?php echo $ischecked; ?>
+                                                    onclick="updateStatus('
+                                                    <?php echo $row['pid']; ?>','
+                                                    <?php echo $row['user_id'];?>','
+                                                    <?php echo $ischecked;?>');"
+                                                    type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                                                    <label class="form-check-label"
+                                                        for="flexSwitchCheckDefault"></label>
+                                                </div>
                                             </td>
                                             <td>
                                                 <?php echo $row['subscription_start'];?>
@@ -152,35 +160,20 @@ try{
                                             <td>
                                                 <?php echo $row['subscription_end'];?>
                                             </td>
-                                           <td>
-                                            <div class="btn-group">
-                                                <!-- Trigger button with just ... -->
-                                                <button class="btn btn-link text-dark no-arrow m-0 p-0"
-                                                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    ...
-                                                </button>
-
-                                                <!-- Dropdown menu with two options -->
-                                                <div class="dropdown-menu dropdown-menu-start mt-2 py-1">
-                                                    <!-- View User -->
-                                                    <a href="view_user.php?id=<?php echo $row['pid']; ?>" 
-                                                    class="dropdown-item">
-                                                        View User
-                                                    </a>
-                                                      <!-- Add User -->
-                                                    <a href="insert_user.php?id=<?php echo $row['pid']; ?>" 
-                                                    class="dropdown-item">
-                                                        Add User
-                                                    </a>
-                                                    <!-- Delete User -->
-                                                    <a href="delete_user.php?pid=<?php echo $row['pid']; ?>" 
-                                                    class="dropdown-item text-danger"
-                                                    onclick="return confirm('Are you sure you want to delete this project?');">
-                                                        Delete User
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </td>
+                                            <td>
+                                                <a href="view_user.php?id=<?php echo $row['pid']; ?>" title="View">
+                                                    <i class="fas fa-eye" style="color:green; margin-right:8px;"></i>
+                                                </a>
+                                                <a href="insert_user.php?id=<?php echo $row['pid']; ?>" title="Edit">
+                                                    <i class="fas fa-edit"
+                                                        style="color:#009cff85; margin-right:8px;"></i>
+                                                </a>
+                                                <a href="delete_user.php?pid=<?php echo $row['pid']; ?>"
+                                                    onclick="return confirm('Are you sure you want to delete this user?');"
+                                                    title="Delete">
+                                                    <i class="fa fa-trash" style="color:#ff0000a8;"></i>
+                                                </a>
+                                            </td>
                                         </tr>
                                         <?php 
                                         }
@@ -232,18 +225,18 @@ try{
     <script src="js/main.js"></script>
 </body>
 <script>
-    function updateStatus(pid,user_id, ischecked){
-        let con= confirm('Are you sure you want to update the status?')
-        if(con){
-            if(ischecked == ""){
-               ischecked = 1; 
-            }else{
+    function updateStatus(pid, user_id, ischecked) {
+        let con = confirm('Are you sure you want to update the status?')
+        if (con) {
+            if (ischecked == "") {
+                ischecked = 1;
+            } else {
                 ischecked = 0;
             }
-            window.location.href="update_status.php?pid="+pid+"&user_id="+user_id+"&is_active="+ischecked;
+            window.location.href = "update_status.php?pid=" + pid + "&user_id=" + user_id + "&is_active=" + ischecked;
         }
     }
     // return ;
-    </script>
+</script>
 
 </html>

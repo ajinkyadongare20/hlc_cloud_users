@@ -13,7 +13,7 @@ function get_all_users($conn){
 
 
 try{
-     include 'db_con.php';
+    include 'db_con.php';
     if ($conn->connect_error) {
         echo json_encode(False);
     }
@@ -138,10 +138,12 @@ try{
                                             </td>
                                             <td>
                                                 <?php  $ischecked = "";if( $row['is_active']==1){$ischecked="checked";} ?>
-                                                    <div class="form-check form-switch">
-                                                        <input class="form-check-input" <?php echo $ischecked; ?> type="checkbox" role="switch"
-                                                            id="flexSwitchCheckDefault">
-                                                        <label class="form-check-label" for="flexSwitchCheckDefault"></label>
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" <?php echo $ischecked; ?>
+                                                    type="checkbox" role="switch"
+                                                    id="flexSwitchCheckDefault">
+                                                    <label class="form-check-label"
+                                                        for="flexSwitchCheckDefault"></label>
                                                 </div>
                                             </td>
                                             <td>
@@ -150,30 +152,31 @@ try{
                                             <td>
                                                 <?php echo $row['subscription_end'];?>
                                             </td>
-                                           <td>
-                                            <div class="btn-group">
-                                                <!-- Trigger button with just ... -->
-                                                <button class="btn btn-link text-dark no-arrow m-0 p-0"
-                                                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    ...
-                                                </button>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <!-- Trigger button with just ... -->
+                                                    <button class="btn btn-link text-dark no-arrow m-0 p-0"
+                                                        data-bs-toggle="dropdown" aria-haspopup="true"
+                                                        aria-expanded="false">
+                                                        ...
+                                                    </button>
 
-                                                <!-- Dropdown menu with two options -->
-                                                <div class="dropdown-menu dropdown-menu-start mt-2 py-1">
-                                                    <!-- View Project -->
-                                                    <a href="view_user.php?id=<?php echo $row['id']; ?>" 
-                                                    class="dropdown-item">
-                                                        View Project
-                                                    </a>
-                                                    <!-- Delete Project -->
-                                                    <a href="delete_project.php?pid=<?php echo $row['pid']; ?>" 
-                                                    class="dropdown-item text-danger"
-                                                    onclick="return confirm('Are you sure you want to delete this project?');">
-                                                        Delete Project
-                                                    </a>
+                                                    <!-- Dropdown menu with two options -->
+                                                    <div class="dropdown-menu dropdown-menu-start mt-2 py-1">
+                                                        <!-- View Project -->
+                                                        <a href="view_user.php?id=<?php echo $row['id']; ?>"
+                                                            class="dropdown-item">
+                                                            View Project
+                                                        </a>
+                                                        <!-- Delete Project -->
+                                                        <a href="delete_project.php?pid=<?php echo $row['pid']; ?>"
+                                                            class="dropdown-item text-danger"
+                                                            onclick="return confirm('Are you sure you want to delete this project?');">
+                                                            Delete Project
+                                                        </a>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </td>
+                                            </td>
 
 
                                         </tr>

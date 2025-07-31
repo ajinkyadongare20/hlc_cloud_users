@@ -15,7 +15,7 @@ function get_all_users($conn){
 
 
 try{
-    include 'db_con.php';
+  include 'db_con.php';
     if ($conn->connect_error) {
         echo json_encode(False);
     }
