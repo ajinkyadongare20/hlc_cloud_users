@@ -10,7 +10,6 @@ function get_all_users($conn){
         }
 }
 
-
 try{
    include 'db_con.php';
    $response = get_all_users($conn);
@@ -30,11 +29,12 @@ try{
     <link href="img/favicon.ico" rel="icon">
     <link rel="icon" href="img/Leal_Logo.jpg" type="image/jpg">
 
-
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+
 
     <!-- Icon Font Stylesheet -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
@@ -43,6 +43,7 @@ try{
     <!-- Libraries Stylesheet -->
     <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
     <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -61,7 +62,6 @@ try{
             </div>
         </div>
         <!-- Spinner End -->
-
 
         <!-- Sidebar Start -->
         <div class="sidebar pe-4 pb-3">
@@ -82,15 +82,12 @@ try{
                     </div>
                 </div>
                 <div class="navbar-nav w-100">
-                    <a href="hlc_users.php" class="nav-item nav-link active my-1"><i
-                            class="fa fa-table me-2"></i>Tables</a>
-                    <a href="dashboard.php" class="nav-item nav-link my-1"><i
-                            class="fa fa-chart-bar me-2"></i>Dashboard</a>
+                    <a href="dashboard.php" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Dashboard</a>
+                    <a href="hlc_users.php" class="nav-item nav-link active"><i class="fa fa-table me-2"></i>Tables</a>
                 </div>
             </nav>
         </div>
         <!-- Sidebar End -->
-
 
         <!-- Content Start -->
         <div class="content">
@@ -107,7 +104,7 @@ try{
                                 </div>
                             </div>
                             <div class="table-responsive">
-                                <table class="table">
+                                <table id="userTable" class="table">
                                     <thead>
                                         <tr>
                                             <th scope="col">#</th>
@@ -121,52 +118,33 @@ try{
                                         </tr>
                                     </thead>
                                     <tbody>
-
                                         <?php
-                                    $response = get_all_users($conn);
-                                    if(mysqli_num_rows($response) > 0){
-                                        $count = 1;
-                                        while ($row = mysqli_fetch_assoc($response)){?>
-
+                                        $response = get_all_users($conn);
+                                        if(mysqli_num_rows($response) > 0){
+                                            $count = 1;
+                                            while ($row = mysqli_fetch_assoc($response)){?>
                                         <tr>
-                                            <th scope="row">
-                                                <?php echo $count++;?>
-                                            </th>
+                                            <th scope="row"><?php echo $count++;?></th>
+                                            <td><?php echo $row['user_id'];?></td>
+                                            <td><?php echo $row['pid'];?></td>
+                                            <td><?php echo $row['mid'];?></td>
                                             <td>
-                                                <?php echo $row['user_id'];?>
-                                            </td>
-                                            <td>
-                                                <?php echo $row['pid'];?>
-                                            </td>
-                                            <td>
-                                                <?php echo $row['mid'];?>
-                                            </td>
-                                            <td>
-                                                <?php  $ischecked = "";if( $row['is_active']==1){$ischecked="checked";} ?>
+                                                <?php  $ischecked = ""; if($row['is_active']==1){$ischecked="checked";} ?>
                                                 <div class="form-check form-switch">
                                                     <input class="form-check-input" <?php echo $ischecked; ?>
-                                                    onclick="updateStatus('
-                                                    <?php echo $row['pid']; ?>','
-                                                    <?php echo $row['user_id'];?>','
-                                                    <?php echo $ischecked;?>');"
+                                                    onclick="updateStatus('<?php echo $row['pid']; ?>','<?php echo $row['user_id'];?>','<?php echo $ischecked;?>');"
                                                     type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                                                    <label class="form-check-label"
-                                                        for="flexSwitchCheckDefault"></label>
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault"></label>
                                                 </div>
                                             </td>
-                                            <td>
-                                                <?php echo $row['subscription_start'];?>
-                                            </td>
-                                            <td>
-                                                <?php echo $row['subscription_end'];?>
-                                            </td>
+                                            <td><?php echo $row['subscription_start'];?></td>
+                                            <td><?php echo $row['subscription_end'];?></td>
                                             <td>
                                                 <a href="view_user.php?id=<?php echo $row['pid']; ?>" title="View">
                                                     <i class="fas fa-eye" style="color:green; margin-right:8px;"></i>
                                                 </a>
                                                 <a href="insert_user.php?id=<?php echo $row['pid']; ?>" title="Edit">
-                                                    <i class="fas fa-edit"
-                                                        style="color:#009cff85; margin-right:8px;"></i>
+                                                    <i class="fas fa-edit" style="color:#009cff85; margin-right:8px;"></i>
                                                 </a>
                                                 <a href="delete_user.php?pid=<?php echo $row['pid']; ?>"
                                                     onclick="return confirm('Are you sure you want to delete this user?');"
@@ -176,12 +154,12 @@ try{
                                             </td>
                                         </tr>
                                         <?php 
+                                            }
                                         }
-                                    }
-                                    ?>
-
+                                        ?>
                                     </tbody>
                                 </table>
+                                <button id="exportBtn" class="btn btn-success mt-3"><i class="fas fa-file-export me-2"></i>Export to CSV</button>
                             </div>
                         </div>
                     </div>
@@ -189,13 +167,11 @@ try{
             </div>
             <!-- Table End -->
 
-
             <!-- Footer Start -->
             <div class="container-fluid pt-4 px-4">
                 <div class="bg-light rounded-top p-4">
                     <div class="row">
                         <div class="col-12 col-sm-6 text-center text-sm-end">
-                            <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
                             Designed By <a href="https://htmlcodex.com">Leal Software Solution</a>
                         </div>
                     </div>
@@ -205,13 +181,13 @@ try{
         </div>
         <!-- Content End -->
 
-
         <!-- Back to Top -->
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="lib/chart/chart.min.js"></script>
     <script src="lib/easing/easing.min.js"></script>
@@ -223,20 +199,72 @@ try{
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
-</body>
-<script>
-    function updateStatus(pid, user_id, ischecked) {
-        let con = confirm('Are you sure you want to update the status?')
-        if (con) {
-            if (ischecked == "") {
-                ischecked = 1;
-            } else {
-                ischecked = 0;
+    <script>
+        function updateStatus(pid, user_id, ischecked) {
+            let con = confirm('Are you sure you want to update the status?')
+            if (con) {
+                if (ischecked == "") {
+                    ischecked = 1;
+                } else {
+                    ischecked = 0;
+                }
+                window.location.href = "update_status.php?pid=" + pid + "&user_id=" + user_id + "&is_active=" + ischecked;
             }
-            window.location.href = "update_status.php?pid=" + pid + "&user_id=" + user_id + "&is_active=" + ischecked;
         }
-    }
-    // return ;
-</script>
 
+        $(document).ready(function () {
+            $('#userTable').DataTable({
+                "pageLength": 5
+            });
+        });
+
+        // CSV Export Functionality - Standalone version (doesn't depend on DataTables)
+        document.getElementById('exportBtn').addEventListener('click', function() {
+            // Create CSV content array
+            let csvContent = [];
+            
+            // Add headers (skip the Action column)
+            const headers = [];
+            document.querySelectorAll('#userTable thead th').forEach(function(th, index) {
+                if (index < 7) { // Skip the last column (Action)
+                    headers.push(`"${th.textContent.trim().replace(/"/g, '""')}"`);
+                }
+            });
+            csvContent.push(headers.join(','));
+            
+            // Add data rows
+            document.querySelectorAll('#userTable tbody tr').forEach(function(row) {
+                const rowData = [];
+                const cells = row.querySelectorAll('td, th[scope="row"]');
+                
+                // Process each cell except the last one (Action column)
+                for (let i = 0; i < cells.length - 1; i++) {
+                    let cell = cells[i];
+                    
+                    // Handle the switch status
+                    if (cell.querySelector('.form-check-input')) {
+                        const isChecked = cell.querySelector('.form-check-input').checked;
+                        rowData.push(`"${isChecked ? 'Active' : 'Inactive'}"`);
+                    } else {
+                        // Normal text content - wrap in quotes and escape existing quotes
+                        let text = cell.textContent.trim().replace(/"/g, '""');
+                        rowData.push(`"${text}"`);
+                    }
+                }
+                
+                csvContent.push(rowData.join(','));
+            });
+            
+            // Create and trigger download
+            const blob = new Blob([csvContent.join('\n')], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'users_data_' + new Date().toISOString().slice(0, 10) + '.csv');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+    </script>
+</body>
 </html>

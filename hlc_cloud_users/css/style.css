@@ -3,6 +3,11 @@
     --primary: #009CFF;
     --light: #F3F6F9;
     --dark: #191C24;
+    --main-font: 'Montserrat', sans-serif;
+}
+
+body {
+    font-family: var(--main-font);
 }
 
 .back-to-top {

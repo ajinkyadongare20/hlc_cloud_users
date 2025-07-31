@@ -37,6 +37,8 @@ try{
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+
 
     <!-- Icon Font Stylesheet -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
@@ -95,10 +97,8 @@ try{
                     </div>
                 </div>
                 <div class="navbar-nav w-100">
-                    <a href="hlc_users.php" class="nav-item nav-link active my-1"><i
-                            class="fa fa-table me-2"></i>Tables</a>
-                    <a href="dashboard.php" class="nav-item nav-link my-1"><i
-                            class="fa fa-chart-bar me-2"></i>Dashboard</a>
+                    <a href="dashboard.php" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Dashboard</a>
+                    <a href="hlc_users.php" class="nav-item nav-link active"><i class="fa fa-table me-2"></i>Tables</a>
                 </div>
             </nav>
         </div>
@@ -196,6 +196,7 @@ try{
                                         ?>
                                     </tbody>
                                 </table>
+                                <button id="exportBtn" class="btn btn-success mt-3"><i class="fas fa-file-export me-2"></i>Export to CSV</button>
                             </div>
                         </div>
                     </div>
@@ -209,7 +210,7 @@ try{
                 <div class="bg-light rounded-top p-4">
                     <div class="row">
                         <div class="col-12 col-sm-6 text-center text-sm-end">
-                            <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
+                            <!--/*** This template is free as long as you keep the footer author's credit link/attribution link/backlink. If you'd like to use the template without the footer author's credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
                             Designed By <a href="https://htmlcodex.com">Leal Software Solution</a>
                         </div>
                     </div>
@@ -252,13 +253,85 @@ try{
             window.location.href = "update_status.php?pid=" + pid + "&user_id=" + user_id + "&is_active=" + ischecked;
         }
     }
-    // return ;
+
     $(document).ready(function () {
         $('#userTable').DataTable({
             "pageLength": 5 // You can change this to 10, 25 etc
         });
     });
 
+    // CSV Export Functionality
+    document.getElementById('exportBtn').addEventListener('click', function() {
+        // Get table data
+        const table = document.getElementById('userTable');
+        const rows = table.querySelectorAll('tr');
+        
+        // Create CSV content
+        let csvContent = [];
+        
+        // Add headers (skip the Action column)
+        const headers = [];
+        table.querySelectorAll('thead th').forEach(function(th, index) {
+            if (index < 7) { // Skip the last column (Action)
+                headers.push(`"${th.textContent.trim().replace(/"/g, '""')}"`);
+            }
+        });
+        csvContent.push(headers.join(','));
+        
+        // Add rows
+        rows.forEach(function(row) {
+            // Skip header row
+            if (row.querySelector('th[scope="row"]')) {
+                const rowData = [];
+                const cells = row.querySelectorAll('td, th[scope="row"]');
+                
+                // Process each cell except the last one (Action column)
+                for (let i = 0; i < cells.length - 1; i++) {
+                    let cell = cells[i];
+                    
+                    // Handle the switch status
+                    if (cell.querySelector('.form-check-input')) {
+                        const isChecked = cell.querySelector('.form-check-input').checked;
+                        rowData.push(`"${isChecked ? 'Active' : 'Inactive'}"`);
+                    } 
+                    // Handle user type with icons
+                    else if (i === 2) { // User Type column
+                        let text = '';
+                        if (cell.querySelector('.no_count')) {
+                            text = cell.querySelector('.no_count').textContent + ' ';
+                        }
+                        if (cell.querySelector('.fa-server')) {
+                            text += 'Server User';
+                        } else if (cell.querySelector('.fa-user')) {
+                            text += 'Regular User';
+                        }
+                        rowData.push(`"${text.replace(/"/g, '""')}"`);
+                    }
+                    // Handle normal text content
+                    else {
+                        let text = cell.textContent.trim().replace(/"/g, '""');
+                        // Remove the eye icon from PID column
+                        if (i === 3) { // PID column
+                            text = text.replace(/👁/g, '').trim();
+                        }
+                        rowData.push(`"${text}"`);
+                    }
+                }
+                
+                csvContent.push(rowData.join(','));
+            }
+        });
+        
+        // Create download link
+        const blob = new Blob([csvContent.join('\n')], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('download', 'users_data_' + new Date().toISOString().slice(0, 10) + '.csv');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    });
 </script>
 
 </html>

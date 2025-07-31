@@ -4,17 +4,17 @@
   <meta charset="UTF-8">
   <title>Invoice</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
+ 
   <!-- Font Stylesheet Montserrat -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
-
+ 
   <style>
     body {
       max-width: 700px;
       margin: 40px auto;
       border: 2px solid #00000087;
       border-radius: 6px;
-      padding: 40px;
+      padding: 20px 40px;
       color: #333;
       font-family:'Montserrat', sans-serif;
     }
@@ -22,13 +22,13 @@
       background-color: #2964a1 !important;
       color: #fff !important;
     }
-
+ 
     .table-horizontal-only td,
     .table-horizontal-only th {
       border-left: none !important;
       border-right: none !important;
     }
-
+ 
     .table-horizontal-only {
       border-left: none !important;
       border-right: none !important;
@@ -36,12 +36,12 @@
   </style>
 </head>
 <body>
-
+ 
   <!-- Header Logo -->
   <div class="text-center mb-5">
-    <img src="https://www.tasktrakhub.com/assets/images/new_tasktrack_logo1.png" class="img-fluid" style="max-width: 220px;" alt="Logo">
+    <img src="img/leal_logo_half.jpg" class="img-fluid" style="max-width: 140px;" alt="Logo">
   </div>
-
+ 
   <!-- Invoice Header -->
   <div class="d-flex justify-content-between border-bottom pb-3 mb-4">
     <div></div>
@@ -51,7 +51,7 @@
       <p class="mb-0"><strong>Invoice Date:</strong> 10/07/2025</p>
     </div>
   </div>
-
+ 
   <!-- Invoice To -->
   <div class="row mb-4">
     <div class="col-sm-6">
@@ -64,7 +64,7 @@
       <p class="mb-0">123 Green Life society, Pune</p>
     </div>
   </div>
-
+ 
   <!-- Invoice Table -->
   <table class="table table-bordered table-horizontal-only align-middle">
     <thead>
@@ -102,7 +102,7 @@
       </tr>
     </tbody>
   </table>
-
+ 
     <!-- Total -->
     <div class="row mt-4">
       <!-- Terms and Conditions (Left) -->
@@ -114,7 +114,7 @@
           <li>Please make checks payable to Your Graphic Design Studio.</li>
         </ul>
       </div>
-
+ 
       <!-- Total (Right) -->
       <div class="col-md-5">
         <table class="table">
@@ -125,12 +125,12 @@
         </table>
       </div>
     </div>  
-
+ 
   <!-- Footer -->
   <div class="mt-5">
     <p class="fst-italic">Thank you for subscribing!</p>
     <p class="fw-bold text-end mt-4">Heatload Calculator</p>
   </div>
-
+ 
 </body>
 </html>
