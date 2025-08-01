@@ -95,7 +95,7 @@ $result = mysqli_query($conn, $sql);
                                             <td>{$row['subscription_start']}</td>
                                             <td>{$row['subscription_end']}</td>
                                             <td>
-                                                <a href='send_csv_mail.php?user_id={$row['user_id']}' title='Send CSV via Email'>
+                                                <a href='subscription_mail.php?pid={$row['pid']}' title='Send CSV via Email'>
                                                     <i class='fa fa-envelope text-primary fs-5'></i>
                                                 </a>
                                             </td>

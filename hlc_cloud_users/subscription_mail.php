@@ -48,7 +48,6 @@ if ($result && $row = $result->fetch_assoc()) {
     .email-header {
       text-align: center;
       padding: 20px;
-      /* background-color: #004aad; */
     }
     .email-header img {
       max-width: 140px;
@@ -58,14 +57,14 @@ if ($result && $row = $result->fetch_assoc()) {
       color: #333;
     }
     h2 {
-      color: #004aad;
+      color: #009cff;
       margin-top: 0;
     }
     .btn {
       display: inline-block;
       padding: 12px 24px;
       margin: 10px 5px;
-      background-color: #0d6efd;
+      background-color: #009cff;
       color: white;
       text-decoration: none;
       border-radius: 4px;
@@ -99,6 +98,13 @@ if ($result && $row = $result->fetch_assoc()) {
       width: 24px;
       margin: 0 6px;
     }
+    hr.hr-line {
+    width: 90%;
+    }
+    p {
+    font-size: 15px;
+    line-height: 24px;
+    }
   </style>
 </head>
 <body>
@@ -107,11 +113,11 @@ if ($result && $row = $result->fetch_assoc()) {
   <div class="email-header">
     <img src="img/leal_logo_half.jpg" alt="Leal Logo">
   </div>
+  <hr class="hr-line">
   <div class="email-body">
     <h2>Hello {$user_id},</h2>
-   <p>Hope you are doing well. This is a kind reminder that your <strong>Heat Load Calculator</strong> plan is set to expire on <strong>{$sub_end}</strong>. We recommend renewing your subscription in advance to ensure continued access to all tools and services.</p>
-
-  <p>Renewing on time will help you maintain uninterrupted access to premium features, saved project data, and technical support. Thank you for choosing Leal Software — we look forward to assisting you with your HVAC calculation and design needs.</p>
+    <p>Hope you are doing well. This is a kind reminder that your <strong>Heat Load Calculator</strong> plan is set to expire on <strong>{$sub_end}</strong>. We recommend renewing your subscription in advance to ensure continued access to all tools and services.</p>
+    <p>Renewing on time will help you maintain uninterrupted access to premium features, saved project data, and technical support. Thank you for choosing Leal Software — we look forward to assisting you with your HVAC calculation and design needs.</p>
 
     <div style="text-align:center;">
       <a href="https://lealsolution.com/payment-link?uid={$user_id}" class="btn" style="background-color:#009CFF; color:white";>Renew Now</a>
